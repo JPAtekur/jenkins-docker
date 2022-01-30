@@ -18,6 +18,7 @@ pipeline{
             steps{
                 echo 'Deploying application'
                 sh 'mvn --version'
+                sh 'mvn install'
             }
         }
     }
