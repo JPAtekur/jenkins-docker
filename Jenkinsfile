@@ -1,6 +1,5 @@
 pipeline{
     agent any
-    
     environment {
         VERSION = "${env.BUILD_ID}"
     }
@@ -8,28 +7,14 @@ pipeline{
         stage('build'){
              steps {
                 echo 'Building application'
-                sh './mvnw install'
+                bat './mvnw install'
             }
         }
-        stage('Dockerize application'){
+        stage('Dockerize and push'){
             
             steps{
-                script{
-                    withCredentials([string(credentialsId: 'docker_pass', variable: 'docker_password')]) {
-                        sh '''
-                            docker build -t atekur/docker-jenkins:${VERSION} .
-                            docker login -u atekur -p $docker_password
-                            docker push atekur/docker-jenkins:${VERSION}
-                        '''
-                    }
-                   
-                }
-            }
-        }
-        stage('deploy'){
-            steps{
-                echo 'Deploying application'
-                
+                bat 'docker build -t atekur/docker_jenkins:%VERSION% .'
+                bat 'docker push atekur/docker_jenkins:%VERSION%'
             }
         }
     }
