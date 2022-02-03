@@ -8,16 +8,11 @@ pipeline{
         stage('build'){
              steps {
                 echo 'Building application'
-                sh 'mvn --version'
-                sh 'mvn install'
+                sh './mvnw install'
             }
         }
         stage('Dockerize application'){
-            agent{
-                docker{
-                    image 'alpine'
-                }
-            }
+            
             steps{
                 script{
                     withCredentials([string(credentialsId: 'docker_pass', variable: 'docker_password')]) {
